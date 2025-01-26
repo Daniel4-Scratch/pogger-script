@@ -11,12 +11,25 @@ config = {
     "execution_level": None
 }
 
-memory = {}
+memory = {"hello": "world"}
+
+def resource_path(relative_path):
+    """ Get absolute path to resource, works for dev and for PyInstaller """
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
 
 def handle(text):
     # Check if text is a memory reference
     # () are used to reference memory
     if text.startswith("(") and text.endswith(")"):
+        if text[1:-1] not in memory:
+            Console.error(f'Memory reference "{text[1:-1]}" not found', 2, 0)
+            
         return memory[text[1:-1]]
     elif text == "True" or text == "False":
         return bool(text)
@@ -43,6 +56,7 @@ class Console:
         ed.display_message("+", "Yippee", text, line, "10")
 
 def execute(line, line_num):
+    global memory
     line_split = line.split(":")
     for i in range(len(line_split)):
         line_split[i] = line_split[i].strip()
@@ -54,7 +68,7 @@ def execute(line, line_num):
     elif line.strip() == "":
         pass
     elif line_split[0] == "mew":
-        os.system("clear")
+        os.system("cls")
     elif line.startswith("//"):
         pass
     elif line_split[0] == "brb":
@@ -63,10 +77,13 @@ def execute(line, line_num):
     elif line_split[0] == "math":
         line = line.replace("math:", "")
         line_split = line.split(":")
-        int1 = int(handle(line_split[0]))
-        int2 = int(handle(line_split[1]))
+        int1 = handle(line_split[0])
+        int2 = handle(line_split[1])
         operator = line_split[2].strip()
         out = line_split[3].strip()
+
+        if type(int1) != int or type(int2) != int:
+            Console.error(f'Invalid value type for math operation "{line}"', 2, line_num + 1)
         
         def save(value):
             memory[out] = value
@@ -87,11 +104,11 @@ def execute(line, line_num):
 
     # MEMORY MANAGEMENT
     elif line_split[0] == "str":
-        memory[str(line_split[1])] = str(line_split[2].strip())
+        memory[str(line_split[1])] = handle(line_split[2].strip()) or str(line_split[2].strip())
     elif line_split[0] == "int":
-        memory[str(line_split[1])] = int(line_split[2])
+        memory[str(line_split[1])] = handle(line_split[2]) or int(line_split[2])
     elif line_split[0] == "bool":
-        memory[str(line_split[1])] = bool(line_split[2])
+        memory[str(line_split[1])] = handle(line_split[2]) or bool(line_split[2])
     elif line_split[0] == "del":
         del memory[str(line_split[1])]
     elif line_split[0] == "inp":
@@ -150,8 +167,33 @@ def execute(line, line_num):
         print(config)
     elif line_split[0] == "memType":
         print(type(memory[line_split[1].strip()]))
+    elif line_split[0] == "about":
+        if config["execution_level"] == "console":
+            print("ヾ(^ω^*)")
+            print("Pogger Script Version: " + config["version"])
+            print("Python Version: " + str(sys.version_info.major) + "." + str(sys.version_info.minor) + "." + str(sys.version_info.micro))
+        else:
+            Console.error("Cannot use command 'about' in file execution", 2, line_num + 1)
+    # MEMORY SAVING
+    elif line_split[0] == "memSave":
+        file = open(line_split[1].strip(), "w")
+        file.write(str(memory))
+        file.close()
+    elif line_split[0] == "memLoad":
+        file = open(line_split[1].strip(), "r")
+        memory = eval(file.read())
+    elif line_split[0] == "memClear":
+        memory = {}
+    # FUN / SPECIAL
+    elif line_split[0] == "rainbow":
+        import other.color as color
+        color.colorize_and_export_ascii(line_split[1].strip(), line_split[2].strip())
+        print(open(line_split[2].strip(), "r").read())
+    elif line_split[0] == "cat":
+        print(open(resource_path("./other/color.txt"), "r").read())
+
     else:
-        Console.error(f'Invalid command "{line}"', 2, line_num + 1)
+        Console.error(f'Invalid command "{line_split[0]}"', 2, line_num + 1)
 
 
 def execute_file(file):

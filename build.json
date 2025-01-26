@@ -19,7 +19,7 @@
   },
   {
    "optionDest": "icon_file",
-   "value": "/other/icon.ico"
+   "value": "./other/icon.ico"
   },
   {
    "optionDest": "name",
@@ -56,6 +56,10 @@
   {
    "optionDest": "bootloader_ignore_signals",
    "value": false
+  },
+  {
+   "optionDest": "datas",
+   "value": "./other;other/"
   }
  ],
  "nonPyinstallerOptions": {

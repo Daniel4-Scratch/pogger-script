@@ -58,6 +58,10 @@ To copy a value from one memory variable to another, use `cpy` followed by the n
 ```
 cpy:FROM:TO
 ```
+or you can just refrence the memory variable you want to copy from using the normal way to store values.
+```
+TYPE:NAME:(FROM)
+```
 
 ### User input
 Use `inp` to get user input and store it in a memory variable
@@ -85,6 +89,20 @@ mem
 Use `memType` to find out the type which a memory variable is
 ```
 memType:NAME
+```
+
+### Memory Management
+Use `memSave` to save the memory to a file
+```
+memSave:FILENAME
+```
+Use `memLoad` to load the memory from a file
+```
+memLoad:FILENAME
+```
+Use `memClear` to clear the memory
+```
+memClear
 ```
 
 ## Math
@@ -116,3 +134,17 @@ IF:VALUE1:OPERATOR:VALUE2:TRUE.POG:FALSE.POG
 - `VALUE2` is the second value
 - `TRUE.POG` is the code to execute if the condition is true
 - `FALSE.POG` is the code to execute if the condition is false
+
+# Development of Pogger Script
+
+## Buidling to exe
+Make sure you have the following pip packages installed:
+- `colorama`
+- `easydebugger`
+- `auto-py-to-exe`
+
+Run the following command to build the script:
+```
+auto-py-to-exe -c build.json
+```
+Then press 'Convert .py to .exe' in the dialog and wait for the build to finish.
