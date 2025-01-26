@@ -1,136 +1,194 @@
-# Programing in Pogger Script
-This page contains the documentation for using Pogger Script.
 
-## Basics
-### Printing
-Use `yap` to print a string. Keep yapping!
+# **Programming in Pogger Script**
+Welcome to the documentation for Pogger Script! This guide provides everything you need to know to get started with Pogger Script.
+
+## **Basics**
+
+### **Printing**
+Use `yap` to print a string to the console.  
+**Syntax**:  
+```
+yap:MESSAGE
+```
+**Example**:  
 ```
 yap:Hello, World!
 ```
-### Clear
-Use `mew` to clear the console. Keep mewing!
+
+### **Clear Console**
+Use `mew` to clear the console.  
+**Syntax**:  
 ```
 mew
 ```
-### Exit
-Use `bai` to exit the program.
+
+### **Exit Program**
+Use `bai` to exit the program.  
+**Syntax**:  
 ```
 bai
 ```
 
-## Memory
-Memory in pogger script is basically variables. You can store values in memory and retrieve them later.
+---
 
-### Storing values
-There are 3 different memory types in pogger script: integers, strings and booleans. They all have their own functions. 
+## **Memory**
 
+Memory in Pogger Script allows you to store, retrieve, and manage variables. Variables can be integers, strings, or booleans.
 
-Types:
-- `int` integer value
-- `str` string value
-- `bool` boolean value
+### **Storing Values**
+Use the following syntax to store a value in memory:  
 ```
 TYPE:NAME:VALUE
 ```
-- `TYPE` is the type of the value you want to store
-- `NAME` is the name of the value you want to store. This is how you will retrieve the value later.
-- `VALUE` is the value you want to store
+- **TYPE**: The data type (`int`, `str`, `bool`).  
+- **NAME**: The variable name.  
+- **VALUE**: The value to store.  
 
-For example, to store an integer value in memory:
+**Example**:  
 ```
 int:myInt:10
 ```
 
-### Retrieving values
-To retrieve a value from memory, use `(NAME)` where `NAME` is the name of the value you want to retrieve. 
+### **Retrieving Values**
+To retrieve a stored value, reference its name using parentheses.  
+**Syntax**:  
 ```
 yap:(NAME)
 ```
 
-### Deleting values
-To delete a value from memory, use `del` followed by the name of the value you want to delete.
+**Example**:  
+```
+yap:(myInt)
+```
+
+### **Deleting Values**
+Use `del` to delete a variable from memory.  
+**Syntax**:  
 ```
 del:NAME
 ```
 
-### Copying values
-To copy a value from one memory variable to another, use `cpy` followed by the name of the memory variable you want to copy from and the name of the memory variable you want to copy to.
+**Example**:  
+```
+del:myInt
+```
+
+### **Copying Values**
+Copy a value from one variable to another using `cpy`.  
+**Syntax**:  
 ```
 cpy:FROM:TO
 ```
-or you can just refrence the memory variable you want to copy from using the normal way to store values.
+
+**Shortcut**: Use the value directly in a memory operation:  
 ```
 TYPE:NAME:(FROM)
 ```
 
-### User input
-Use `inp` to get user input and store it in a memory variable
+**Example**:  
+```
+cpy:myInt:newInt
+```
+
+### **User Input**
+Use `inp` to capture user input and store it in memory.  
+**Syntax**:  
 ```
 inp:NAME:PROMPT
 ```
 
-### Random
-Use `rnd` to generate a random number between two values
+**Example**:  
+```
+inp:username:Enter your name:
+```
+
+### **Random Number Generation**
+Generate a random number within a range using `rnd`.  
+**Syntax**:  
 ```
 rnd:MIN:MAX:OUTPUT
 ```
 
-### Convert
-Use `cnv` to convert a value to another
+**Example**:  
+```
+rnd:1:100:randomNum
+```
+
+### **Type Conversion**
+Convert a value to another type using `cnv`.  
+**Syntax**:  
 ```
 cnv:VALUE:TYPE:OUTPUT
 ```
 
-### Debugging
-Use `mem` to print the value of a memory variable
+**Example**:  
 ```
-mem
-```
-Use `memType` to find out the type which a memory variable is
-```
-memType:NAME
+cnv:123:str:stringValue
 ```
 
-### Memory Management
-Use `memSave` to save the memory to a file
+### **Debugging Memory**
+- Print current memory: `mem`  
+- Get a variable's type: `memType:NAME`
+
+**Example**:  
 ```
-memSave:FILENAME
+mem
+memType:myInt
 ```
-Use `memLoad` to load the memory from a file
-```
-memLoad:FILENAME
-```
-Use `memClear` to clear the memory
+
+### **Clearing Memory**
+Clear all memory using `memClear`.  
+**Syntax**:  
 ```
 memClear
 ```
 
-## Math
-Pogger script supports basic math operations. You can add, subtract, multiply and divide integers.
+### **Saving and Loading Memory**
+- Save memory to a file: `memSave:FILENAME`  
+- Load memory from a file: `memLoad:FILENAME`
 
-- `add` adds two integers
-- `sub` subtracts two integers
-- `mul` multiplies two integers
-- `div` divides two integers
-- `mod` returns the remainder of a division
+**Examples**:  
+```
+memSave:backup.mem
+memLoad:backup.mem
+```
 
-``` 
+---
+
+## **Math**
+
+Perform basic arithmetic operations using `math`.  
+**Syntax**:  
+```
 math:VALUE1:VALUE2:OPERATION:OUTPUT
 ```
-- `VALUE1` is the first integer value
-- `VALUE2` is the second integer value
-- `OPERATION` is the math operation you want to perform
-- `OUTPUT` is the name of the memory variable you want to store the result in
-  
-## Conditionals
-Pogger script supports basic conditionals. You can compare two values and execute different code based on the result.
-Operators:
-- `==` equal to
+- **VALUE1** and **VALUE2**: Operands.  
+- **OPERATION**: The operation (`add`, `sub`, `mul`, `div`, `mod`).  
+- **OUTPUT**: The variable to store the result.
+
+**Example**:  
+```
+math:10:5:add:sum
+```
+
+---
+
+## **Conditionals**
+
+Execute different code based on conditions using `IF`.  
+**Syntax**:  
 ```
 IF:VALUE1:OPERATOR:VALUE2:TRUE.POG:FALSE.POG
 ```
-- `VALUE1` is the first value
-- `OPERATOR` is the comparison operator
-- `VALUE2` is the second value
-- `TRUE.POG` is the code to execute if the condition is true
-- `FALSE.POG` is the code to execute if the condition is false
+- **VALUE1**: First value.  
+- **OPERATOR**: Comparison operator (`==`, `!=`, `<`, `>`, `>=`, `<=`).  
+- **VALUE2**: Second value.  
+- **TRUE.POG**: Code to execute if true.  
+- **FALSE.POG**: Code to execute if false.  
+
+**Example**:  
+```
+IF:(score):>=:50:pass.pog:fail.pog
+```
+---
+test

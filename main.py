@@ -153,11 +153,19 @@ def execute(line, line_num):
             false = line_split[5].strip()
 
         if operator == "==":
-            if value1 == value2:
-                execute_file(true)
-            else:
-                if false != "":
-                    execute_file(false)
+            execute_file(true if value1 == value2 else false)
+        elif operator == "!=":
+            execute_file(true if value1 != value2 else false)
+        elif operator == ">":
+            execute_file(true if value1 > value2 else false)
+        elif operator == "<":
+            execute_file(true if value1 < value2 else false)
+        elif operator == ">=":
+            execute_file(true if value1 >= value2 else false)
+        elif operator == "<=":
+            execute_file(true if value1 <= value2 else false)
+
+
         else:
             Console.error(f'Invalid operator "{operator}"', 2, line_num + 1)
     # DEBUG
