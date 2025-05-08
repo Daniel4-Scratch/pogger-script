@@ -1,17 +1,20 @@
 # Pogger Script Executer
-
-import os, sys, random
+import sys
+sys.dont_write_bytecode = True
+import os, random
 import easydebugger as ed
+import gziptool as gzt
 from colorama import init as colorama_init
 colorama_init()
 
 config = {
     "version": "0.1.0",
     "debug": False,
-    "execution_level": None
+    "execution_level": None,
+    "os": os.name
 }
-
 memory = {"hello": "world"}
+archive = None
 
 def resource_path(relative_path):
     """ Get absolute path to resource, works for dev and for PyInstaller """
@@ -68,7 +71,10 @@ def execute(line, line_num):
     elif line.strip() == "":
         pass
     elif line_split[0] == "mew":
-        os.system("cls")
+        if config["os"] == "nt":
+            os.system("cls")
+        else:
+            os.system("clear")
     elif line.startswith("//"):
         pass
     elif line_split[0] == "brb":
@@ -200,12 +206,34 @@ def execute(line, line_num):
     elif line_split[0] == "cat":
         print(open(resource_path("./other/color.txt"), "r").read())
 
+    elif line_split[0] == "help":
+        print("no")
+
     else:
         Console.error(f'Invalid command "{line_split[0]}"', 2, line_num + 1)
 
 
 def execute_file(file):
-    if os.path.isfile(file):
+    global archive
+    if archive != None:
+        ## find that file in the archive
+        if file in archive:
+            lines = archive[file].decode("utf-8").splitlines()
+            for line in lines:
+                execute(line, lines.index(line))
+        else:
+            Console.error(f'File "{file}" not found in archive', 2, 0)
+    elif os.path.isfile(file) and file.endswith(".pogexec"):
+        if gzt.isFileGz(sys.argv[1]):
+                config["execution_level"] = "archive"
+                ## execute "main.pog"
+                archive = gzt.extract_custom_gzip_archive_to_memory(sys.argv[1])
+                for file in archive:
+                    if file == "main.pog":
+                        execute(archive[file].decode("utf-8"), 0)
+                    else:
+                        Console.warn(f'File "{file}" not found in archive', 2)
+    elif os.path.isfile(file):
         file = open(file, "r")
         lines = file.readlines()
         for line in lines:
@@ -226,8 +254,22 @@ if __name__ == "__main__":
     if len(sys.argv) == 1:
         main()
     else:
-        if os.path.isfile(sys.argv[1]):
+        if os.path.isfile(sys.argv[1]) and not sys.argv[1].endswith(".pogexec"):
             config["execution_level"] = "file"
             execute_file(sys.argv[1])
+        elif sys.argv[1].endswith(".pogexec"):
+            if gzt.isFileGz(sys.argv[1]):
+                config["execution_level"] = "archive"
+                ## execute "main.pog"
+                archive = gzt.extract_custom_gzip_archive_to_memory(sys.argv[1])
+                found = False
+                for file in archive:
+                    if file == "main.pog":
+                        execute_file("main.pog")
+                        found = True
+                        break
+                if not found:
+                    Console.error(f'File "main.pog" not found in archive', 2, 0)
+                
         else:
             Console.error(f'File "{sys.argv[1]}" not found', 2, 0)
