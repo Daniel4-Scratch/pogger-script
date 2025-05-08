@@ -13,7 +13,11 @@ config = {
     "execution_level": None,
     "os": os.name
 }
-memory = {"hello": "world"}
+files = {
+    "scripts": ["pog"],
+    "executables": ["pogexec", "pogx", "pogex"],
+}
+memory = {}
 archive = None
 
 def resource_path(relative_path):
@@ -215,7 +219,7 @@ def execute(line, line_num):
 
 def execute_file(file):
     global archive
-    if archive != None:
+    if archive != None and config["execution_level"] == "archive":
         ## find that file in the archive
         if file in archive:
             lines = archive[file].decode("utf-8").splitlines()
@@ -223,16 +227,19 @@ def execute_file(file):
                 execute(line, lines.index(line))
         else:
             Console.error(f'File "{file}" not found in archive', 2, 0)
-    elif os.path.isfile(file) and file.endswith(".pogexec"):
+    elif os.path.isfile(file) and file.endswith(tuple(files["executables"])):
         if gzt.isFileGz(sys.argv[1]):
                 config["execution_level"] = "archive"
                 ## execute "main.pog"
                 archive = gzt.extract_custom_gzip_archive_to_memory(sys.argv[1])
                 for file in archive:
                     if file == "main.pog":
-                        execute(archive[file].decode("utf-8"), 0)
-                    else:
-                        Console.warn(f'File "{file}" not found in archive', 2)
+                        execute_file("main.pog")
+                        found = True
+                        break
+                if not found:
+                    Console.error(f'File "main.pog" not found in archive', 2, 0)
+                
     elif os.path.isfile(file):
         file = open(file, "r")
         lines = file.readlines()
@@ -254,22 +261,8 @@ if __name__ == "__main__":
     if len(sys.argv) == 1:
         main()
     else:
-        if os.path.isfile(sys.argv[1]) and not sys.argv[1].endswith(".pogexec"):
+        if os.path.isfile(sys.argv[1]):
             config["execution_level"] = "file"
-            execute_file(sys.argv[1])
-        elif sys.argv[1].endswith(".pogexec"):
-            if gzt.isFileGz(sys.argv[1]):
-                config["execution_level"] = "archive"
-                ## execute "main.pog"
-                archive = gzt.extract_custom_gzip_archive_to_memory(sys.argv[1])
-                found = False
-                for file in archive:
-                    if file == "main.pog":
-                        execute_file("main.pog")
-                        found = True
-                        break
-                if not found:
-                    Console.error(f'File "main.pog" not found in archive', 2, 0)
-                
+            execute_file(sys.argv[1]) 
         else:
             Console.error(f'File "{sys.argv[1]}" not found', 2, 0)
