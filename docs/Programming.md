@@ -91,7 +91,7 @@ cpy:myInt:newInt
 ```
 
 ### **User Input**
-Use `inp` to capture user input and store it in memory.  
+Use `inp` to capture user input and store it in memory as a string.  
 **Syntax**:  
 ```
 inp:NAME:PROMPT
