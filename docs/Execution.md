@@ -15,3 +15,11 @@ These can change the way file paths are handled and how the script is executed.
 Stored in the config runtime dictionary as `os`. 
 
 These don't change the core functionality of a script, slight differences can occur across different OS environments.
+
+# Executables
+Executables are compressed pogger script files bundles into a single file using gzip technology.
+They must end with the `.pogx`, `pogexec`, or `.pogex` suffix so the executor can identify them and run them correctly.
+```
+pogscript <executable_file>
+```
+Learn more about executables in the [Executables](Executables.md) page.
