@@ -203,10 +203,6 @@ def execute(line, line_num):
     elif line_split[0] == "memClear":
         memory = {}
     # FUN / SPECIAL
-    elif line_split[0] == "rainbow":
-        import other.color as color
-        color.colorize_and_export_ascii(line_split[1].strip(), line_split[2].strip())
-        print(open(line_split[2].strip(), "r").read())
     elif line_split[0] == "cat":
         print(open(resource_path("./other/color.txt"), "r").read())
 
@@ -232,13 +228,14 @@ def execute_file(file):
                 config["execution_level"] = "archive"
                 ## execute "main.pog"
                 archive = gzt.extract_custom_gzip_archive_to_memory(sys.argv[1])
-                for file in archive:
-                    if file == "main.pog":
+                found = False
+                for cfile in archive:
+                    if cfile == "main.pog":
                         execute_file("main.pog")
                         found = True
                         break
                 if not found:
-                    Console.error(f'File "main.pog" not found in archive', 2, 0)
+                    Console.error(f'File "main.pog" not found in the executable "{file}"', 2, 0)
                 
     elif os.path.isfile(file):
         file = open(file, "r")
