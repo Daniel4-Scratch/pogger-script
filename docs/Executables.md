@@ -17,10 +17,10 @@ MyExecutable.pogx
 The recommended suffix for executable files is `.pogx`, `pogexec`, or `.pogex`. 
 
 # Executable Creation
-Currently you can create executables using the `gziptool.py` file in the source code directory.
+Currently you can create executables using the `--archive` and `--unarchive` options of the pogger script executor.
 ```
-Archive: python gziptool.py archive <output_file> <input_files> 
-Unarchive: python gziptool.py unarchive <input_file> <output_dir>
+pogscript --archive <executable_file> <script1.pog> <script2.pog> ...
+pogscript --unarchive <executable_file> <output_directory>
 ```
 # Executing the Executable
 Just pass the executable file location to the pogger script executor. It will read the suffix and execute the file.

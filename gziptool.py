@@ -113,8 +113,5 @@ try:
             print("Unarchive: python main.py unarchive <input_file> <output_dir>")
 
 except Exception as e:
-    open("error.log", "w").write(str(e))
-    if sys.platform == "win32":
-        os.system("notepad.exe error.log")
-    else:
-        print("An error occurred. Check error.log in the cwd for details.")
+    from main import Console
+    Console.error(f"! GZIP ERROR: {e}", 2)

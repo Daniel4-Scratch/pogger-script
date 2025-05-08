@@ -10,15 +10,16 @@ colorama_init()
 config = {
     "version": "0.1.0",
     "debug": False,
-    "execution_level": None,
-    "os": os.name
+    "execution_level": None, # console, file, archive == executable
+    "os": os.name,
+    "gizpDest": "RAM" # where to extract the gzip archive, RAM or folder location
 }
 files = {
     "scripts": ["pog"],
     "executables": ["pogexec", "pogx", "pogex"],
 }
-memory = {}
-archive = None
+memory = {} # store variables in memory
+archive = None # store the archive in memory
 
 def resource_path(relative_path):
     """ Get absolute path to resource, works for dev and for PyInstaller """
@@ -270,5 +271,9 @@ if __name__ == "__main__":
         if os.path.isfile(sys.argv[1]):
             config["execution_level"] = "file"
             execute_file(sys.argv[1]) 
+        elif sys.argv[1] == "--archive":
+            gzt.create_custom_gzip_archive(sys.argv[2], *sys.argv[3:])
+        elif sys.argv[1] == "--unarchive":
+            gzt.extract_custom_gzip_archive(sys.argv[2], sys.argv[3])
         else:
             Console.error(f'File "{sys.argv[1]}" not found', 2, 0)
