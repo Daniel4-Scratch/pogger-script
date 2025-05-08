@@ -1,5 +1,8 @@
 # Executables
-Executales in pogger script are compressed pogger script files bundles into a single file using gzip technology. 
+Executales in pogger script are compressed pogger script files bundled into a single file using gzip technology.
+Pros:
+- Portable
+- Smaller file size
 
 # Executable Structure
 Executables must contain a `main.pog` file, which is the entry point for the script.

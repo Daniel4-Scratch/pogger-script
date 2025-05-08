@@ -46,12 +46,19 @@ def handle(text):
     return text
 
 class Console:
-    def error(text, level, line):
+    '''
+    Errror Levels:
+    0 = No Error
+    1 = Warning
+    2 = Fatal Error
+    '''
+    def error(text, level, line=None):
         # using blob2763's easydebugger :)
         ed.display_message("!", "Womp Womp", text + ". Err Lvl: " + str(level), line, "9")
         if level == 2:
             if config["execution_level"] == "file":
                 exit()
+
 
     def warn(text, line):
         ed.display_message("*", "Womp?", text, line, "11")
@@ -224,10 +231,10 @@ def execute_file(file):
         else:
             Console.error(f'File "{file}" not found in archive', 2, 0)
     elif os.path.isfile(file) and file.endswith(tuple(files["executables"])):
-        if gzt.isFileGz(sys.argv[1]):
+        if gzt.isFileGz(file):
                 config["execution_level"] = "archive"
                 ## execute "main.pog"
-                archive = gzt.extract_custom_gzip_archive_to_memory(sys.argv[1])
+                archive = gzt.extract_custom_gzip_archive_to_memory(file)
                 found = False
                 for cfile in archive:
                     if cfile == "main.pog":
@@ -235,7 +242,9 @@ def execute_file(file):
                         found = True
                         break
                 if not found:
-                    Console.error(f'File "main.pog" not found in the executable "{file}"', 2, 0)
+                    Console.error(f'File "main.pog" not found in the executable "{file}"', 2)
+        else:
+            Console.error(f'File "{file}" is not a valid archive/executable', 2)
                 
     elif os.path.isfile(file):
         file = open(file, "r")
@@ -244,7 +253,7 @@ def execute_file(file):
             execute(line, lines.index(line))
         file.close()
     else:
-        Console.error(f'File "{file}" not found', 2, 0)
+        Console.error(f'File "{file}" not found', 2)
 
 def main():
     config["execution_level"] = "console"
