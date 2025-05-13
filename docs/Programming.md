@@ -1,4 +1,3 @@
-
 # **Programming in Pogger Script**
 Welcome to the documentation for Pogger Script! This guide provides everything you need to know to get started with Pogger Script.
 
@@ -20,6 +19,13 @@ Use `mew` to clear the console.
 **Syntax**:  
 ```
 mew
+```
+
+### **Pause Execution**
+Use `brb` to pause execution until the user presses Enter.  
+**Syntax**:  
+```
+brb
 ```
 
 ### **Exit Program**
@@ -175,10 +181,10 @@ math:10:5:add:sum
 
 ## **Conditionals**
 
-Execute different code based on conditions using `IF`.  
+Execute different code based on conditions using `if`.  
 **Syntax**:  
 ```
-IF:VALUE1:OPERATOR:VALUE2:TRUE.POG:FALSE.POG
+if:VALUE1:OPERATOR:VALUE2:TRUE.POG:FALSE.POG
 ```
 - **VALUE1**: First value.  
 - **OPERATOR**: Comparison operator (`==`, `!=`, `<`, `>`, `>=`, `<=`).  
@@ -188,7 +194,28 @@ IF:VALUE1:OPERATOR:VALUE2:TRUE.POG:FALSE.POG
 
 **Example**:  
 ```
-IF:(score):>=:50:pass.pog:fail.pog
+if:(score):>=:50:pass.pog:fail.pog
 ```
+
 ---
-test
+
+## **Special Commands**
+
+### **Display File Content**
+Use `cat` to display the content of the `other/color.txt` file.  
+**Syntax**:  
+```
+cat
+```
+
+### **Help**
+Use `help` to display a placeholder message.  
+**Syntax**:  
+```
+help
+```
+
+**Example**:  
+```
+help
+```

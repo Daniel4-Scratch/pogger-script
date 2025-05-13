@@ -20,6 +20,7 @@ files = {
 }
 memory = {} # store variables in memory
 archive = None # store the archive in memory
+fileN = None # file name for debugging
 
 def resource_path(relative_path):
     """ Get absolute path to resource, works for dev and for PyInstaller """
@@ -55,6 +56,8 @@ class Console:
     '''
     def error(text, level, line=None):
         # using blob2763's easydebugger :)
+        if fileN != None:
+            text = text + " in file: " + fileN
         ed.display_message("!", "Womp Womp", text + ". Err Lvl: " + str(level), line, "9")
         if level == 2:
             if config["execution_level"] == "file":
@@ -233,6 +236,7 @@ def execute_file(file):
             Console.error(f'File "{file}" not found in archive', 2, 0)
     elif os.path.isfile(file) and file.endswith(tuple(files["executables"])):
         if gzt.isFileGz(file):
+                fileN = file
                 config["execution_level"] = "archive"
                 ## execute "main.pog"
                 archive = gzt.extract_custom_gzip_archive_to_memory(file)
@@ -248,6 +252,7 @@ def execute_file(file):
             Console.error(f'File "{file}" is not a valid archive/executable', 2)
                 
     elif os.path.isfile(file):
+        fileN = file
         file = open(file, "r")
         lines = file.readlines()
         for line in lines:
