@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # Pogger Script Executer
 import sys
 sys.dont_write_bytecode = True
@@ -94,6 +95,8 @@ def execute(line, line_num):
         pass
     elif line_split[0] == "brb":
         input("Press enter to continue...")
+    elif line_split[0].startswith("#"):
+        pass
     # MATH
     elif line_split[0] == "math":
         line = line.replace("math:", "")
