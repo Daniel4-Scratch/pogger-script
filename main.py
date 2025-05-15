@@ -61,8 +61,8 @@ class Console:
             text = text + " in file: " + fileN
         ed.display_message("!", "Womp Womp", text + ". Err Lvl: " + str(level), line, "9")
         if level == 2:
-            if config["execution_level"] == "file":
-                exit()
+            if config["execution_level"] == "file" or config["execution_level"] == "archive":
+                sys.exit(1)
 
 
     def warn(text, line):
@@ -81,7 +81,7 @@ def execute(line, line_num):
         line_split[i] = line_split[i].strip()
     # BASE
     if line_split[0] == "bai":
-        exit()
+        sys.exit(0)
     elif line_split[0] == "yap":
         print(handle(line_split[1].strip()))
     elif line.strip() == "":
