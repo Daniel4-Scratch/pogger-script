@@ -5,8 +5,8 @@ This page contains the documentation for the creation Pogger Script.
 Make sure you have the following pip packages installed:
 - `colorama`
 - `easydebugger`
+- `pyinstaller`
 - `auto-py-to-exe`
-
 Run the following command to build the script:
 ```
 auto-py-to-exe -c build.json
