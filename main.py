@@ -13,7 +13,8 @@ config = {
     "debug": False,
     "execution_level": None, # console, file, archive == executable
     "os": os.name,
-    "gizpDest": "RAM" # where to extract the gzip archive, RAM or folder location
+    "gizpDest": "RAM", # where to extract the gzip archive, RAM or folder location
+    "permissions":[]
 }
 files = {
     "scripts": ["pog"],
@@ -47,6 +48,23 @@ def handle(text):
         return int(text)
 
     return text
+
+class Permissions:
+    def check(permission):
+        if permission not in config["permissions"]:
+            return False
+        return True
+    def add(permission):
+        if permission not in config["permissions"]:
+            config["permissions"].append(permission)
+        else:
+            Console.warn(f'Permission "{permission}" already exists', 0)
+    def remove(permission):
+        if permission in config["permissions"]:
+            config["permissions"].remove(permission)
+        else:
+            Console.warn(f'Permission "{permission}" not found', 0)
+    
 
 class Console:
     '''
@@ -161,6 +179,49 @@ def execute(line, line_num):
         max = int(line_split[2])
         output = line_split[3].strip()
         memory[output] = random.randint(min, max)
+    # PERMISSIONS
+    elif line_split[0] == "perm":
+        if len(line_split) < 3:
+            Console.error(f'Invalid permission command "{line}"', 2, line_num + 1)
+        command = line_split[1].strip()
+        permission = line_split[2].strip()
+        if command == "add":
+            if config["execution_level"] == "file":
+                if input(f'Enable permission "{permission}"? (y/n) ').strip().lower() == "y":
+                    Permissions.add(permission)
+            else:
+                Permissions.add(permission)
+        elif command == "remove":
+            Permissions.remove(permission)
+        elif command == "check":
+            Permissions.check(permission)
+        else:
+            Console.error(f'Invalid permission command "{command}"', 2, line_num + 1)
+    # FILE MANAGEMENT
+    elif line_split[0] == "file":
+        if Permissions.check("file"):
+            command = line_split[1].strip()
+            if command == "write":
+                if len(line_split) < 4:
+                    Console.error(f'Invalid file write command "{line}"', 2, line_num + 1)
+                file = line_split[2].strip()
+                text = line_split[3].strip()
+                if os.path.isfile(file):
+                    with open(file, "a") as f:
+                        f.write(text + "\n")
+                else:
+                    Console.error(f'File "{file}" not found', 2, line_num + 1)
+            if command == "read":
+                if len(line_split) < 3:
+                    Console.error(f'Invalid file read command "{line}"', 2, line_num + 1)
+                file = line_split[2].strip()
+                if os.path.isfile(file):
+                    with open(file, "r") as f:
+                        memory["$file_"+file] = f.read()
+                else:
+                    Console.error(f'File "{file}" not found', 2, line_num + 1)
+        else:
+            Console.error(f'Permission "file" not granted', 1, line_num + 1)
     # CONDITIONALS
     elif line_split[0] == "if":
         # Layout VALUE:OPERATOR:VALUE:TRUE:FALSE
@@ -206,6 +267,14 @@ def execute(line, line_num):
             print("Python Version: " + str(sys.version_info.major) + "." + str(sys.version_info.minor) + "." + str(sys.version_info.micro))
         else:
             Console.error("Cannot use command 'about' in file execution", 2, line_num + 1)
+    elif line_split[0] == "dump":
+        print(config)
+        print(memory)
+        print(archive)
+        print(fileN)
+
+        
+
     # MEMORY SAVING
     elif line_split[0] == "memSave":
         file = open(line_split[1].strip(), "w")
