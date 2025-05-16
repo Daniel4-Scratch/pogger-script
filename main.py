@@ -183,6 +183,7 @@ def execute(line, line_num):
     elif line_split[0] == "perm":
         if len(line_split) < 3:
             Console.error(f'Invalid permission command "{line}"', 2, line_num + 1)
+            return
         command = line_split[1].strip()
         permission = line_split[2].strip()
         if command == "add":
