@@ -101,7 +101,10 @@ def execute(line, line_num):
     if line_split[0] == "bai":
         sys.exit(0)
     elif line_split[0] == "yap":
-        print(handle(line_split[1].strip()))
+        if len(line_split) > 1:
+            print(handle(line_split[1].strip()))
+        else:
+            Console.error(f'Invalid yap command "{line}"', 1, line_num + 1)
     elif line.strip() == "":
         pass
     elif line_split[0] == "mew":
