@@ -1,3 +1,4 @@
+> [!NOTE] gonna archive this brcause this is super unoptimised and just a quick thing i made for fun
 # Pogger Script
 Brain rot ahh language
 
